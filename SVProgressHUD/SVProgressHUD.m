@@ -52,6 +52,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
 @property (nonatomic, readonly) CGFloat visibleKeyboardHeight;
 @property (nonatomic, assign) UIOffset offsetFromCenter;
+@property (nonatomic, getter = isVisible) BOOL visible;
 
 
 - (void)showProgress:(float)progress
@@ -472,7 +473,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 #pragma mark - Master show/dismiss methods
 
 - (void)showProgress:(float)progress status:(NSString*)string maskType:(SVProgressHUDMaskType)hudMaskType {
-    
+
     if(!self.overlayView.superview){
         NSEnumerator *frontToBackWindows = [[[UIApplication sharedApplication]windows]reverseObjectEnumerator];
         
@@ -525,7 +526,8 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
     self.overlayView.backgroundColor = [UIColor clearColor];
     [self positionHUD:nil];
     
-    if(self.alpha != 1) {
+    if(!self.isVisible) {
+        [self setVisible:YES];
         NSDictionary *userInfo = [self notificationUserInfo];
         [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDWillAppearNotification
                                                             object:nil
@@ -594,6 +596,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 }
 
 - (void)dismiss {
+    [self setVisible:NO];
     NSDictionary *userInfo = [self notificationUserInfo];
     [[NSNotificationCenter defaultCenter] postNotificationName:SVProgressHUDWillDisappearNotification
                                                         object:nil
@@ -719,7 +722,7 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 #pragma mark - Utilities
 
 + (BOOL)isVisible {
-    return ([self sharedView].alpha == 1);
+    return [self sharedView].isVisible;
 }
 
 
