@@ -29,6 +29,8 @@ typedef NSUInteger SVProgressHUDMaskType;
 
 @interface SVProgressHUD : UIView
 
++ (SVProgressHUD*)sharedView;
+
 #pragma mark - Customization
 
 + (void)setBackgroundColor:(UIColor*)color; // default is [UIColor whiteColor]

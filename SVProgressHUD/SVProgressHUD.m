@@ -456,7 +456,10 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
     }
     
     else {
-        [self moveToPoint:newCenter rotateAngle:rotateAngle];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+            [self moveToPoint:newCenter rotateAngle:0];
+        else
+            [self moveToPoint:newCenter rotateAngle:rotateAngle];
     }
     
 }
@@ -476,12 +479,14 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 
     if(!self.overlayView.superview){
         NSEnumerator *frontToBackWindows = [[[UIApplication sharedApplication]windows]reverseObjectEnumerator];
-        
+
+        UIWindow *frontMostWindow;
+
         for (UIWindow *window in frontToBackWindows)
-            if (window.windowLevel == UIWindowLevelNormal) {
-                [window addSubview:self.overlayView];
-                break;
-            }
+            if (window.windowLevel < UIWindowLevelAlert)
+                frontMostWindow = window;
+
+        [frontMostWindow addSubview:self.overlayView];
     }
     
     if(!self.superview)
