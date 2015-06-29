@@ -734,7 +734,9 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
 #pragma mark - Getters
 
 - (NSTimeInterval)displayDurationForString:(NSString*)string {
-    return MIN((float)string.length*0.06 + 0.3, 5.0);
+    //Change this janky set up to display for min of 1 sec
+    NSTimeInterval displayTime = MIN((float)string.length*0.06 + 0.3, 5.0);
+    return MAX(displayTime, 1.0);
 }
 
 - (BOOL)isClear { // used for iOS 7
